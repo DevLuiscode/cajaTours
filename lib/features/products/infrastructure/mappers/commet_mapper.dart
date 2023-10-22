@@ -1,10 +1,12 @@
 import 'package:teslo_shop/features/products/domain/entities/commet.dart';
+import 'package:teslo_shop/features/products/infrastructure/models/comment_db.dart';
+import 'package:teslo_shop/features/products/infrastructure/models/comments_response.dart';
 
 class CommetMapper {
-  static Commet jsonToEntity(Map<String, dynamic> json) => Commet(
-        id: json["id"],
-        idDest: json["idDest"],
-        idUser: json["idUser"],
-        detail: json["detail"],
+  static Commet jsonToEntity(CommentDb commentDb) => Commet(
+        id: commentDb.id.toString(),
+        idDest: commentDb.idDest.toString(),
+        idUser: commentDb.idUser.toString(),
+        detail: commentDb.detail,
       );
 }

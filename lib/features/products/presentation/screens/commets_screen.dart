@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:teslo_shop/config/config.dart';
+import 'package:teslo_shop/features/auth/presentation/providers/auth_provider.dart';
+import 'package:teslo_shop/features/products/presentation/providers/comments_provider.dart';
 
 class CommentScreen extends StatelessWidget {
   final String commetID;
@@ -60,7 +63,7 @@ class Comment extends StatelessWidget {
   }
 }
 
-class ItemComments extends StatelessWidget {
+class ItemComments extends ConsumerStatefulWidget {
   const ItemComments({
     super.key,
     required this.commetID,
@@ -69,13 +72,26 @@ class ItemComments extends StatelessWidget {
   final String commetID;
 
   @override
+  _ItemCommentsState createState() => _ItemCommentsState();
+}
+
+class _ItemCommentsState extends ConsumerState<ItemComments> {
+  @override
+  void initState() {
+    super.initState();
+    ref.read(commentsProvider.notifier).loadComments(widget.commetID);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final comments = ref.watch(commentsProvider);
     return Expanded(
       flex: 6,
       child: ListView.builder(
-        itemCount: 10,
+        itemCount: comments.comment.length,
         itemExtent: 100,
         itemBuilder: ((context, index) {
+          final comment = comments.comment[index];
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -85,9 +101,19 @@ class ItemComments extends StatelessWidget {
               color: colorSeed,
               borderRadius: BorderRadius.circular(20),
             ),
-            child: Text(
-              commetID,
-              style: const TextStyle(color: Colors.white),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  comment.idUser,
+                  style: const TextStyle(color: Colors.white),
+                ),
+                Text(
+                  comment.detail,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ],
             ),
           );
         }),

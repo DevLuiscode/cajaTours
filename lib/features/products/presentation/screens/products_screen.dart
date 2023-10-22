@@ -47,8 +47,9 @@ class _ProductsViewState extends ConsumerState {
   void initState() {
     scrollController.addListener(() {
       if ((scrollController.position.pixels + 400) >=
-          scrollController.position.maxScrollExtent) ;
-      ref.read(productsProvider.notifier).loadNextPage();
+          scrollController.position.maxScrollExtent) {
+        ref.read(productsProvider.notifier).loadNextPage();
+      }
     });
     super.initState();
   }

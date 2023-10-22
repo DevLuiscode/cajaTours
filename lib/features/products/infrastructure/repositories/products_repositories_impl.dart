@@ -1,3 +1,5 @@
+import 'package:teslo_shop/features/products/domain/entities/commet.dart';
+
 import '../../domain/domain.dart';
 
 class ProductsRepositoriesImpl extends ProductsRepository {
@@ -22,5 +24,10 @@ class ProductsRepositoriesImpl extends ProductsRepository {
   @override
   Future<List<Product>> searchProductByTerm(String term) {
     return dataSources.searchProductByTerm(term);
+  }
+
+  @override
+  Future<List<Commet>> getComments(String idDest) {
+    return dataSources.getComments(idDest);
   }
 }

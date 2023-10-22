@@ -1,12 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:teslo_shop/features/commets/presentation/screens/commets.dart';
 import 'package:teslo_shop/features/products/presentation/screens/maps_screen.dart';
 import 'package:teslo_shop/features/products/presentation/screens/products_screen_user.dart';
 
 import '../../features/auth/presentation/providers/auth_provider.dart';
 
 import '../../features/auth/presentation/screens/screens.dart';
-import '../../features/products/domain/entities/product.dart';
+
 import '../../features/products/presentation/screens/screens.dart';
 import 'app_router_notfier.dart';
 
@@ -69,11 +70,14 @@ final goRouterProvider = Provider((ref) {
         builder: (context, state) =>
             const VideoReproductorScreen(video: 'video'),
       ),
+      //comments
+      GoRoute(
+        path: '/comments/:id',
+        builder: (context, state) => CommetsScreen(
+          commetID: state.params['id'] ?? 'no-id',
+        ),
+      ),
     ],
-
-    ///! TODO: Bloquear si no se está autenticado de alguna manera
-    ///
-    ///
     redirect: (context, state) {
       final isGoingTo = state.subloc;
       final authStatus = goRouterNotifier.authStatus;
@@ -81,8 +85,9 @@ final goRouterProvider = Provider((ref) {
       final authState = ref.read(authProvider);
       final user = authState.user;
 
-      if (isGoingTo == '/splash' && authStatus == AuthStatus.checking)
+      if (isGoingTo == '/splash' && authStatus == AuthStatus.checking) {
         return null;
+      }
 
       if (authStatus == AuthStatus.notAunthenticated) {
         if (isGoingTo == '/login' || isGoingTo == '/register') return null;

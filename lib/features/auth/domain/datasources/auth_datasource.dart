@@ -1,3 +1,5 @@
+import 'package:teslo_shop/features/products/domain/entities/commet.dart';
+
 import '../entities/user.dart';
 
 abstract class AuthDataSource {
@@ -9,5 +11,6 @@ abstract class AuthDataSource {
     String password,
     String confirPassword,
   );
+
   Future<User> checkAuthStatus(String token);
 }

@@ -1,3 +1,4 @@
+import 'package:teslo_shop/features/products/domain/entities/commet.dart';
 import 'package:teslo_shop/features/products/domain/entities/product.dart';
 
 abstract class ProductsDataSources {
@@ -5,4 +6,5 @@ abstract class ProductsDataSources {
   Future<Product> getProductById(String id);
   Future<List<Product>> searchProductByTerm(String term);
   Future<Product> createUpdateProduct(Map<String, dynamic> productLike);
+  Future<List<Commet>> getComments(String idDest);
 }

@@ -3,7 +3,7 @@ import 'package:video_player/video_player.dart';
 
 class VideoReproductorScreen extends StatefulWidget {
   final String video;
-  const VideoReproductorScreen({required this.video});
+  const VideoReproductorScreen({super.key, required this.video});
 
   @override
   State<VideoReproductorScreen> createState() => _VideoReproductorScreenState();
@@ -12,6 +12,7 @@ class VideoReproductorScreen extends StatefulWidget {
 class _VideoReproductorScreenState extends State<VideoReproductorScreen> {
   late VideoPlayerController _controller;
 
+  @override
   void initState() {
     super.initState();
     _controller = VideoPlayerController.networkUrl(Uri.parse(widget.video))

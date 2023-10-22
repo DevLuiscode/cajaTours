@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:teslo_shop/config/config.dart';
+import 'package:teslo_shop/features/products/domain/entities/commet.dart';
 import 'package:teslo_shop/features/products/infrastructure/infrastructure.dart';
+import 'package:teslo_shop/features/products/infrastructure/mappers/commet_mapper.dart';
 
 import '../../domain/domain.dart';
 
@@ -22,31 +24,7 @@ class ProductsDataSourcesImple implements ProductsDataSources {
   @override
   Future<Product> createUpdateProduct(Map<String, dynamic> productLike) async {
     try {
-      // final String? productId = productLike['id'];
-
-      // final String method = (productId == null) ? 'POST' : 'PATCH';
-      // final String url = (productId == null)
-      //     ? '/api/destination/alldestinations'
-      //     : '/api/destination/alldestinations/id=$productId';
-      // productLike.remove('id');
-
-      // print(jsonEncode(productLike));
-
-      // final response = await dio.request(
-      //   url,
-      //   data: productLike,
-      //   options: Options(
-      //     method: method,
-      //   ),
-      // );
-
-      // final product = ProductMapper.jsonToEntity(response.data);
-
-      // return product;
-
-      final String? productId = productLike['id'];
-
-      final String url = '/api/destination/alldestinations';
+      const String url = '/api/destination/alldestinations';
       productLike.remove('id');
 
       final response = await dio.post(
@@ -67,7 +45,7 @@ class ProductsDataSourcesImple implements ProductsDataSources {
     try {
       final ids = int.parse(id);
       final response = await dio.get('/api/destination/getdestid?id=$ids');
-      print('Response data: ${response.data['result']}');
+
       final product = ProductMapper.jsonToEntity(response.data['result']);
 
       return product;
@@ -99,7 +77,22 @@ class ProductsDataSourcesImple implements ProductsDataSources {
 
   @override
   Future<List<Product>> searchProductByTerm(String term) {
-    // TODO: implement searchProductByTerm
     throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Commet>> getComments(String idDest) async {
+    final response =
+        await dio.get<List>('/api/destination/commentsdestinos?idDest=$idDest');
+    final List<Commet> comments = [];
+    for (var commetJson in response.data ?? []) {
+      if (commetJson is Map<String, dynamic>) {
+        var comment = CommetMapper.jsonToEntity(commetJson);
+        comments.add(comment);
+      }
+    }
+
+    //response.data!.map((e) => CommetMapper.jsonToEntity(e));
+    return comments;
   }
 }

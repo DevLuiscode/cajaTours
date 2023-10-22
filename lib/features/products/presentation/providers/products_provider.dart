@@ -27,7 +27,7 @@ class ProductsNotifier extends StateNotifier<ProductsState> {
 
     final products = await productsRepository.getProducts(
         limit: state.limit, offset: state.offset);
-    print(products);
+
     if (products.isEmpty) {
       state = state.copyWith(
         isLoading: false,

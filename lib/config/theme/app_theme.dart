@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 const colorSeed = Color(0xff424CB8);
 const scaffoldBackgroundColor = Color(0xFFF8F7F7);
+const colorCommnet = Color.fromARGB(255, 187, 186, 186);
 
 class AppTheme {
   ThemeData getTheme() => ThemeData(

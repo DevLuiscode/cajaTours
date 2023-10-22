@@ -170,37 +170,42 @@ class _DestinosViewState extends State<_DestinosView> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.deepPurple,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const Row(
-                      children: [
-                        Text(
-                          'Comentarios',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                  GestureDetector(
+                    onTap: () {
+                      context.push('/comments/${widget.product.id}');
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.deepPurple,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Row(
+                        children: [
+                          Text(
+                            'Comentarios',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Text(
-                          '+234',
-                          style: TextStyle(
-                            color: Colors.white,
+                          SizedBox(
+                            width: 20,
                           ),
-                        ),
-                        Icon(
-                          Icons.arrow_forward,
-                          color: Colors.white,
-                        )
-                      ],
+                          Text(
+                            '+234',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          Icon(
+                            Icons.arrow_forward,
+                            color: Colors.white,
+                          )
+                        ],
+                      ),
                     ),
                   ),
                   const Spacer(),
@@ -447,28 +452,7 @@ class LikesAndShare extends StatelessWidget {
             ),
             label: const Text('230'),
           ),
-          TextButton.icon(
-            onPressed: () {},
-            style: TextButton.styleFrom(
-                foregroundColor: Colors.black,
-                textStyle: Theme.of(context).textTheme.titleSmall),
-            icon: const Icon(
-              Icons.reply_outlined,
-            ),
-            label: const Text('430'),
-          ),
           const Spacer(),
-          TextButton.icon(
-            onPressed: () {},
-            style: TextButton.styleFrom(
-                backgroundColor: Colors.blue.shade100,
-                foregroundColor: Colors.blue,
-                textStyle: Theme.of(context).textTheme.titleSmall),
-            icon: const Icon(
-              Icons.check_circle_outline,
-            ),
-            label: const Text('Checkin'),
-          ),
         ],
       ),
     );

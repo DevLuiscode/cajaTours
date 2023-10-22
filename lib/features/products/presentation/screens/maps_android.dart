@@ -19,7 +19,7 @@ class _MapSampleState extends State<MapSample> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Maps Sample App'),
+          title: const Text('Maps Sample App'),
           backgroundColor: Colors.green[700],
         ),
         body: GoogleMap(

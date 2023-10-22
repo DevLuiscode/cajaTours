@@ -21,7 +21,7 @@ class ProductsUserScreen extends StatelessWidget {
           IconButton(
             onPressed: () {},
             icon: const Icon(
-              Icons.search_rounded,
+              Icons.camera_alt_outlined,
             ),
           )
         ],

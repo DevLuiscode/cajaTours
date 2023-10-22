@@ -28,7 +28,7 @@ class _NavigationScreenState extends State<MapsScreen> {
   Location location = Location();
   Marker? sourcePosition, destinationPosition;
   loc.LocationData? _currentPosition;
-  LatLng curLocation = LatLng(-7.148863, -78.506861);
+  LatLng curLocation = const LatLng(-7.148863, -78.506861);
   StreamSubscription<loc.LocationData>? locationSubscription;
 
   @override
@@ -112,27 +112,27 @@ class _NavigationScreenState extends State<MapsScreen> {
   }
 
   getNavigation() async {
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
     final GoogleMapController? controller = await _controller.future;
     location.changeSettings(accuracy: loc.LocationAccuracy.high);
-    _serviceEnabled = await location.serviceEnabled();
+    serviceEnabled = await location.serviceEnabled();
 
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
         return;
       }
     }
 
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
+    permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
         return;
       }
     }
-    if (_permissionGranted == loc.PermissionStatus.granted) {
+    if (permissionGranted == loc.PermissionStatus.granted) {
       _currentPosition = await location.getLocation();
       curLocation =
           LatLng(_currentPosition!.latitude!, _currentPosition!.longitude!);
@@ -178,9 +178,7 @@ class _NavigationScreenState extends State<MapsScreen> {
                   title:
                       '${double.parse((getDistance(LatLng(widget.lat, widget.lng)).toStringAsFixed(2)))} km',
                 ),
-                onTap: () {
-                  print('Marker tapped');
-                },
+                onTap: () {},
               );
             });
 
@@ -210,9 +208,7 @@ class _NavigationScreenState extends State<MapsScreen> {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
         points.add({'lat': point.latitude, 'lng': point.longitude});
       });
-    } else {
-      print('-------------${result.errorMessage}');
-    }
+    } else {}
     addPolyLine(polylineCoordinates);
   }
 
@@ -245,12 +241,12 @@ class _NavigationScreenState extends State<MapsScreen> {
   addMarker() {
     setState(() {
       sourcePosition = Marker(
-        markerId: MarkerId('source'),
+        markerId: const MarkerId('source'),
         position: curLocation,
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
       );
       destinationPosition = Marker(
-        markerId: MarkerId('destination'),
+        markerId: const MarkerId('destination'),
         position: LatLng(widget.lat, widget.lng),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
       );

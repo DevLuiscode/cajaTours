@@ -1,3 +1,4 @@
+import '../entities/commet.dart';
 import '../entities/product.dart';
 
 abstract class ProductsRepository {
@@ -5,4 +6,5 @@ abstract class ProductsRepository {
   Future<Product> getProductById(String id);
   Future<List<Product>> searchProductByTerm(String term);
   Future<Product> createUpdateProduct(Map<String, dynamic> productLike);
+  Future<List<Commet>> getComments(String idDest);
 }

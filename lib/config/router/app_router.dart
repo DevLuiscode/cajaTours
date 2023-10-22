@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:teslo_shop/features/commets/presentation/screens/commets.dart';
+
 import 'package:teslo_shop/features/products/presentation/screens/maps_screen.dart';
 import 'package:teslo_shop/features/products/presentation/screens/products_screen_user.dart';
 
@@ -8,6 +8,7 @@ import '../../features/auth/presentation/providers/auth_provider.dart';
 
 import '../../features/auth/presentation/screens/screens.dart';
 
+import '../../features/products/presentation/screens/commets_screen.dart';
 import '../../features/products/presentation/screens/screens.dart';
 import 'app_router_notfier.dart';
 
@@ -73,7 +74,7 @@ final goRouterProvider = Provider((ref) {
       //comments
       GoRoute(
         path: '/comments/:id',
-        builder: (context, state) => CommetsScreen(
+        builder: (context, state) => CommentScreen(
           commetID: state.params['id'] ?? 'no-id',
         ),
       ),

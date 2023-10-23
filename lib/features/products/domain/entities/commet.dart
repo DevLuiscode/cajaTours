@@ -5,7 +5,7 @@ class Commet {
   final String detail;
 
   Commet({
-    required this.id,
+    this.id = '',
     required this.idDest,
     this.idUser = '',
     required this.detail,

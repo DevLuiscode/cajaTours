@@ -9,7 +9,9 @@ import 'package:teslo_shop/features/products/infrastructure/mappers/all_user_map
 import 'package:teslo_shop/features/products/infrastructure/mappers/commet_mapper.dart';
 import 'package:teslo_shop/features/products/infrastructure/models/all_user_response.dart';
 import 'package:teslo_shop/features/products/infrastructure/models/comments_response.dart';
+import 'package:teslo_shop/features/products/infrastructure/models/post_comments_response.dart';
 
+import '../../../auth/infrastructure/errors/auth_errors.dart';
 import '../../domain/domain.dart';
 
 class ProductsDataSourcesImple implements ProductsDataSources {
@@ -101,11 +103,29 @@ class ProductsDataSourcesImple implements ProductsDataSources {
 
       final user = allUser.firstWhere((user) => user.id == userId);
 
-      comment.idUser = user.name;
+      comment.idUser = "${user.name} ${user.lastname}";
 
       return comment;
     }).toList();
 
     return comments;
+  }
+
+  @override
+  Future<Commet> postComment(
+      String detail, String idDest, String idUser) async {
+    final response = await dio.post(
+      '/api/destination/addcomment/$idDest',
+      data: {
+        "idDest": idDest,
+        "idUser": idUser,
+        "detail": detail,
+      },
+    );
+
+    final comm = PostCommetsResponse.fromJson(response.data);
+
+    final comment = PostCommetMapper.jsonToEntity(comm.result);
+    return comment;
   }
 }

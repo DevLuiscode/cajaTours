@@ -30,4 +30,9 @@ class ProductsRepositoriesImpl extends ProductsRepository {
   Future<List<Commet>> getComments(String idDest) {
     return dataSources.getComments(idDest);
   }
+
+  @override
+  Future<Commet> postComment(String idDest, String idUser, String detail) {
+    return dataSources.postComment(idDest, idUser, detail);
+  }
 }

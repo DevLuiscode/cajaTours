@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:teslo_shop/config/config.dart';
-import 'package:teslo_shop/features/auth/presentation/providers/auth_provider.dart';
+
 import 'package:teslo_shop/features/products/presentation/providers/comments_provider.dart';
+import 'package:teslo_shop/features/products/presentation/providers/post_comment.dart';
+
+import '../../../auth/presentation/providers/providers.dart';
 
 class CommentScreen extends StatelessWidget {
   final String commetID;
@@ -16,19 +19,33 @@ class CommentScreen extends StatelessWidget {
         title: const Text('Comentarios'),
       ),
       body: Column(
-        children: [ItemComments(commetID: commetID), const Comment()],
+        children: [
+          ItemComments(commetID: commetID),
+          Comment(
+            idDest: commetID,
+          ),
+        ],
       ),
     );
   }
 }
 
-class Comment extends StatelessWidget {
+class Comment extends ConsumerWidget {
+  final String idDest;
+  static final TextEditingController commentController =
+      TextEditingController();
+
   const Comment({
     super.key,
+    required this.idDest,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final commentForm = ref.watch(commentFormProvider);
+    final authState = ref.read(authProvider);
+    final user = authState.user;
+    //TextEditingController commentController = TextEditingController();
     return Expanded(
       child: SafeArea(
         top: false,
@@ -45,6 +62,16 @@ class Comment extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    controller: commentController,
+                    onChanged: (value) {
+                      ref
+                          .read(commentFormProvider.notifier)
+                          .onCommentTextChange(
+                            idDest,
+                            user!.id,
+                            value,
+                          );
+                    },
                     decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Escribe un comentario...',
@@ -54,7 +81,13 @@ class Comment extends StatelessWidget {
                   ),
                 ),
               ),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.send))
+              IconButton(
+                  onPressed: () {
+                    ref.read(commentFormProvider.notifier).onFormSubmit();
+                    ref.read(commentsProvider.notifier).loadComments(idDest);
+                    commentController.clear();
+                  },
+                  icon: const Icon(Icons.send))
             ],
           ),
         ),
@@ -84,21 +117,21 @@ class _ItemCommentsState extends ConsumerState<ItemComments> {
 
   @override
   Widget build(BuildContext context) {
+    final themeText = Theme.of(context).textTheme;
+
     final comments = ref.watch(commentsProvider);
     return Expanded(
       flex: 6,
       child: ListView.builder(
         itemCount: comments.comment.length,
-        itemExtent: 100,
         itemBuilder: ((context, index) {
           final comment = comments.comment[index];
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            height: 20,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: colorSeed,
+              color: colorCommnet,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Column(
@@ -107,11 +140,15 @@ class _ItemCommentsState extends ConsumerState<ItemComments> {
               children: [
                 Text(
                   comment.idUser,
-                  style: const TextStyle(color: Colors.white),
+                  style: themeText.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
                 ),
                 Text(
                   comment.detail,
-                  style: const TextStyle(color: Colors.white),
+                  style: themeText.titleSmall?.copyWith(fontSize: 15),
+                  maxLines: 2,
                 ),
               ],
             ),

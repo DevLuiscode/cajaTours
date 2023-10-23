@@ -12,6 +12,8 @@ import 'package:teslo_shop/features/products/products.dart';
 import 'package:teslo_shop/features/shared/shared.dart';
 import 'package:video_player/video_player.dart';
 
+import '../providers/comments_provider.dart';
+
 class ProductScreen extends ConsumerWidget {
   final String productId;
   const ProductScreen({super.key, required this.productId});
@@ -29,7 +31,7 @@ class ProductScreen extends ConsumerWidget {
   }
 }
 
-class _DestinosView extends StatefulWidget {
+class _DestinosView extends ConsumerStatefulWidget {
   final Product product;
 
   const _DestinosView({
@@ -37,16 +39,16 @@ class _DestinosView extends StatefulWidget {
   });
 
   @override
-  State<_DestinosView> createState() => _DestinosViewState();
+  _DestinosViewState createState() => _DestinosViewState();
 }
 
-class _DestinosViewState extends State<_DestinosView> {
+class _DestinosViewState extends ConsumerState<_DestinosView> {
   late ScrollController _controller;
 
   @override
   void initState() {
     _controller = ScrollController(initialScrollOffset: 200);
-
+    ref.read(commentsProvider.notifier).loadComments(widget.product.id);
     super.initState();
   }
 
@@ -58,6 +60,9 @@ class _DestinosViewState extends State<_DestinosView> {
 
   @override
   Widget build(BuildContext context) {
+    final comments = ref.watch(commentsProvider);
+    final cantidadComments = comments.comment.length;
+
     return Stack(
       children: [
         CustomScrollView(
@@ -182,25 +187,25 @@ class _DestinosViewState extends State<_DestinosView> {
                         color: Colors.deepPurple,
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: const Row(
+                      child: Row(
                         children: [
-                          Text(
+                          const Text(
                             'Comentarios',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 20,
                           ),
                           Text(
-                            '+234',
-                            style: TextStyle(
+                            '+$cantidadComments',
+                            style: const TextStyle(
                               color: Colors.white,
                             ),
                           ),
-                          Icon(
+                          const Icon(
                             Icons.arrow_forward,
                             color: Colors.white,
                           )

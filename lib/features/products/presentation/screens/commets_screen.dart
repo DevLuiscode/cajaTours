@@ -82,10 +82,17 @@ class Comment extends ConsumerWidget {
                 ),
               ),
               IconButton(
-                  onPressed: () {
-                    ref.read(commentFormProvider.notifier).onFormSubmit();
-                    ref.read(commentsProvider.notifier).loadComments(idDest);
-                    commentController.clear();
+                  onPressed: () async {
+                    if (commentController.text.isNotEmpty) {
+                      await ref
+                          .read(commentFormProvider.notifier)
+                          .onFormSubmit();
+
+                      await ref
+                          .read(commentsProvider.notifier)
+                          .loadComments(idDest);
+                      commentController.clear();
+                    }
                   },
                   icon: const Icon(Icons.send))
             ],
@@ -120,39 +127,116 @@ class _ItemCommentsState extends ConsumerState<ItemComments> {
     final themeText = Theme.of(context).textTheme;
 
     final comments = ref.watch(commentsProvider);
+    final authState = ref.read(authProvider);
+    final user = authState.user;
+
+    final fullName = "${user?.name} ${user?.lastname}";
+
     return Expanded(
       flex: 6,
       child: ListView.builder(
         itemCount: comments.comment.length,
         itemBuilder: ((context, index) {
           final comment = comments.comment[index];
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: colorCommnet,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  comment.idUser,
-                  style: themeText.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
+          return (fullName == comment.idUser)
+              ? Dismissible(
+                  key: Key(fullName),
+                  direction: DismissDirection.endToStart,
+                  background: Container(),
+                  secondaryBackground: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: const Icon(
+                      Icons.delete,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-                Text(
-                  comment.detail,
-                  style: themeText.titleSmall?.copyWith(fontSize: 15),
-                  maxLines: 2,
-                ),
-              ],
-            ),
-          );
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: colorCommnet,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                comment.idUser,
+                                style: themeText.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                              ),
+                              Text(
+                                comment.detail,
+                                style: themeText.titleSmall
+                                    ?.copyWith(fontSize: 15),
+                                maxLines: 2,
+                              ),
+                            ],
+                          ),
+                        ),
+                        (comment.idUser == fullName)
+                            ? const Icon(
+                                Icons.person,
+                                color: colorSeed,
+                              )
+                            : const SizedBox(),
+                      ],
+                    ),
+                  ),
+                )
+              : Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: colorCommnet,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              comment.idUser,
+                              style: themeText.titleSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            ),
+                            Text(
+                              comment.detail,
+                              style:
+                                  themeText.titleSmall?.copyWith(fontSize: 15),
+                              maxLines: 2,
+                            ),
+                          ],
+                        ),
+                      ),
+                      (comment.idUser == fullName)
+                          ? const Icon(
+                              Icons.person,
+                              color: colorSeed,
+                            )
+                          : const SizedBox(),
+                    ],
+                  ),
+                );
         }),
       ),
     );

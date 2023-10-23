@@ -142,9 +142,12 @@ class _ItemCommentsState extends ConsumerState<ItemComments> {
               ? Dismissible(
                   key: Key(fullName),
                   direction: DismissDirection.endToStart,
-                  background: Container(),
-                  secondaryBackground: Container(
-                    color: Colors.red,
+                  background: Container(
+                    margin: const EdgeInsets.only(left: 200),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                     alignment: Alignment.centerRight,
                     padding: const EdgeInsets.only(right: 16.0),
                     child: const Icon(

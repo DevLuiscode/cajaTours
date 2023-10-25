@@ -39,16 +39,6 @@ class Product {
         "imgs": List<dynamic>.from(imgs.map((x) => x.toJson())),
         "videos": List<dynamic>.from(videos.map((x) => x.toJson())),
       };
-
-  // @override
-  // String toString() {
-  //   // TODO: implement toString
-  //   return '''
-  //   soy product
-  //   imgs: $imgs,
-  //   videos: $videos,
-  // ''';
-  // }
 }
 
 class Img {
@@ -105,9 +95,4 @@ class Video {
         "filePath": filePath,
         "url": url,
       };
-
-  // @override
-  // String toString() {
-  //   return 'Video{id: $id, idDest: $idDest, filePath: $filePath, url: $url}';
-  // }
 }

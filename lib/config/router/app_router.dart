@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:teslo_shop/features/products/presentation/screens/loading_screen.dart';
 
 import 'package:teslo_shop/features/products/presentation/screens/maps_screen.dart';
 import 'package:teslo_shop/features/products/presentation/screens/products_screen_user.dart';
@@ -77,6 +78,10 @@ final goRouterProvider = Provider((ref) {
         builder: (context, state) => CommentScreen(
           commetID: state.params['id'] ?? 'no-id',
         ),
+      ),
+      GoRoute(
+        path: '/loading',
+        builder: (context, state) => const LoadingScreen(),
       ),
     ],
     redirect: (context, state) {

@@ -42,7 +42,6 @@ class Comment extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final commentForm = ref.watch(commentFormProvider);
     final authState = ref.read(authProvider);
     final user = authState.user;
     //TextEditingController commentController = TextEditingController();
@@ -155,6 +154,11 @@ class _ItemCommentsState extends ConsumerState<ItemComments> {
                       color: Colors.white,
                     ),
                   ),
+                  onDismissed: (direction) {
+                    ref
+                        .read(commentFormProvider.notifier)
+                        .deleteComment(comment.id);
+                  },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 10),

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:teslo_shop/features/products/domain/domain.dart';
+import 'package:teslo_shop/features/products/presentation/providers/form/like_provider.dart';
 import 'package:teslo_shop/features/products/presentation/providers/form/product_provider.dart';
 import 'package:teslo_shop/features/products/presentation/providers/product_provider.dart';
 
@@ -49,6 +50,7 @@ class _DestinosViewState extends ConsumerState<_DestinosView> {
   void initState() {
     _controller = ScrollController(initialScrollOffset: 200);
     ref.read(commentsProvider.notifier).loadComments(widget.product.id);
+
     super.initState();
   }
 
@@ -176,7 +178,11 @@ class _DestinosViewState extends ConsumerState<_DestinosView> {
               child: Row(
                 children: [
                   GestureDetector(
-                    onTap: () {
+                    onTap: () async {
+                      await ref
+                          .read(commentsProvider.notifier)
+                          .loadComments(widget.product.id);
+                      await Future.delayed(const Duration(seconds: 1));
                       context.push('/comments/${widget.product.id}');
                     },
                     child: Container(
@@ -219,6 +225,7 @@ class _DestinosViewState extends ConsumerState<_DestinosView> {
                       getPermisos();
                       final latitude = widget.product.latitude;
                       final longitude = widget.product.longitude;
+
                       context.push('/map/$latitude/$longitude');
                     },
                     child: const Icon(Icons.location_on),
@@ -336,19 +343,9 @@ class AnimatedDetailHeader extends StatelessWidget {
                     color: Colors.grey,
                     size: 30.0,
                   ),
-                  onPressed: () {},
-                ),
-              ),
-              Positioned(
-                top: topPadding + 30,
-                right: 300 * (0.1 - bottomPorcent),
-                child: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.more_horiz,
-                    color: Colors.grey,
-                    size: 30,
-                  ),
+                  onPressed: () {
+                    context.push('/user');
+                  },
                 ),
               ),
               Positioned(
@@ -397,9 +394,12 @@ class AnimatedDetailHeader extends StatelessWidget {
             ],
           ),
         ),
-        const Positioned.fill(
+        Positioned.fill(
           top: null,
-          child: TranslateAnimation(child: LikesAndShare()),
+          child: TranslateAnimation(
+              child: LikesAndShare(
+            id: product.id,
+          )),
         ),
       ],
     );
@@ -428,13 +428,33 @@ class TranslateAnimation extends StatelessWidget {
   }
 }
 
-class LikesAndShare extends StatelessWidget {
+class LikesAndShare extends ConsumerStatefulWidget {
+  final String id;
   const LikesAndShare({
+    required this.id,
     super.key,
   });
 
   @override
+  _LikesAndShareState createState() => _LikesAndShareState();
+}
+
+class _LikesAndShareState extends ConsumerState<LikesAndShare> {
+  @override
+  void initState() {
+    ref.read(likesProvider.notifier).loadLikes(widget.id);
+    // ref.read(likesProvider.notifier).postLikes(widget.id);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final likes = ref.watch(likesProvider);
+
+    final countLikes = likes.like?.like;
+    final buttonLike = likes.button;
+    final cd = ref.read(likesProvider).postLikeResult?.idDest;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       height: 80,
@@ -448,14 +468,33 @@ class LikesAndShare extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextButton.icon(
-            onPressed: () {},
+            onPressed: () async {
+              final delete = ref.read(likesProvider).postLikeResult?.id;
+              //final cd = ref.read(likesProvider).postLikeResult?.idDest;
+
+              if (buttonLike == false) {
+                await ref.read(likesProvider.notifier).postLikes(widget.id);
+              }
+              if (buttonLike == true) {
+                await ref
+                    .read(likesProvider.notifier)
+                    .deleteLikes(delete.toString());
+              }
+
+              await ref.read(likesProvider.notifier).loadLikes(widget.id);
+            },
             style: TextButton.styleFrom(
                 foregroundColor: Colors.black,
                 textStyle: Theme.of(context).textTheme.titleSmall),
-            icon: const Icon(
-              Icons.favorite_border_outlined,
-            ),
-            label: const Text('230'),
+            icon: buttonLike == true
+                ? const Icon(
+                    Icons.favorite,
+                    color: Colors.red,
+                  )
+                : const Icon(
+                    Icons.favorite_border_outlined,
+                  ),
+            label: Text('$countLikes'),
           ),
           const Spacer(),
         ],
@@ -575,8 +614,6 @@ class BuilderPersistenDelegate extends SliverPersistentHeaderDelegate {
 ///
 //
 
-//TODO
-
 //
 class _ProductView extends ConsumerWidget {
   final Product product;
@@ -595,7 +632,6 @@ class _ProductView extends ConsumerWidget {
           height: 250,
           width: 600,
           child: _ImageGallery(images: product.imgs),
-          //child: Image.network(product.imgs.last.url),
         ),
         const SizedBox(height: 10),
         Center(

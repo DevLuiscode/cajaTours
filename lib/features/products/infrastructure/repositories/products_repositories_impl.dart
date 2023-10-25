@@ -1,4 +1,5 @@
 import 'package:teslo_shop/features/products/domain/entities/commet.dart';
+import 'package:teslo_shop/features/products/domain/entities/like.dart';
 
 import '../../domain/domain.dart';
 
@@ -34,5 +35,25 @@ class ProductsRepositoriesImpl extends ProductsRepository {
   @override
   Future<Commet> postComment(String idDest, String idUser, String detail) {
     return dataSources.postComment(idDest, idUser, detail);
+  }
+
+  @override
+  Future<Commet> deleteComment(String idComment) {
+    return dataSources.deleteComment(idComment);
+  }
+
+  @override
+  Future<Like> getLikes(String idDest) {
+    return dataSources.getLikes(idDest);
+  }
+
+  @override
+  Future<PostLikeResult> posLike(String idDest) {
+    return dataSources.posLike(idDest);
+  }
+
+  @override
+  Future<DeleteLikeResponse> deleteLike(String idLike) {
+    return dataSources.deleteLike(idLike);
   }
 }

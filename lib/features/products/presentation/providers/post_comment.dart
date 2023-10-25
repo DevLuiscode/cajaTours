@@ -34,8 +34,10 @@ class CommentFormState {
 
 class CommentFormNotifier extends StateNotifier<CommentFormState> {
   final Function(String, String, String) postCommentCallback;
+  final Function(String) deleteCommentCallback;
   CommentFormNotifier({
     required this.postCommentCallback,
+    required this.deleteCommentCallback,
   }) : super(CommentFormState());
 
   onCommentTextChange(String idDestin, String idUser, String comment) {
@@ -49,6 +51,10 @@ class CommentFormNotifier extends StateNotifier<CommentFormState> {
       idUser: idUse,
       isValid: newCommentText.isNotEmpty,
     );
+  }
+
+  deleteComment(String idComment) async {
+    await deleteCommentCallback(idComment);
   }
 
   onFormSubmit() async {
@@ -73,6 +79,14 @@ class CommentFormNotifier extends StateNotifier<CommentFormState> {
 final commentFormProvider =
     StateNotifierProvider<CommentFormNotifier, CommentFormState>((ref) {
   final postComment = ref.watch(productsRepositoryProvider).postComment;
+  final deteletComment = ref.watch(productsRepositoryProvider).deleteComment;
 
-  return CommentFormNotifier(postCommentCallback: postComment);
+  return CommentFormNotifier(
+      postCommentCallback: postComment, deleteCommentCallback: deteletComment);
 });
+// final deleteProvider =
+//     StateNotifierProvider<CommentFormNotifier, CommentFormState>((ref) {
+//   final postComment = ref.watch(productsRepositoryProvider).deleteComment;
+
+//   return CommentFormNotifier(postCommentCallback: postComment);
+// });

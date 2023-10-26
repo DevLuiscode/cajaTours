@@ -31,23 +31,26 @@ class PostLikeResult {
   int id;
   int idUser;
   int idDest;
+  bool state;
 
-  PostLikeResult({
-    required this.id,
-    required this.idUser,
-    required this.idDest,
-  });
+  PostLikeResult(
+      {required this.id,
+      required this.idUser,
+      required this.idDest,
+      this.state = false});
 
   factory PostLikeResult.fromJson(Map<String, dynamic> json) => PostLikeResult(
         id: json["id"],
         idUser: json["idUser"],
         idDest: json["idDest"],
+        state: json["estado"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "idUser": idUser,
         "idDest": idDest,
+        "estado": state,
       };
 }
 

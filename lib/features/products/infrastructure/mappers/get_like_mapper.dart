@@ -12,6 +12,7 @@ class PostLikeMapper {
         id: json["id"],
         idUser: json["idUser"],
         idDest: json["idDest"],
+        state: json["estado"],
       );
 }
 

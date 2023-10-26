@@ -443,7 +443,7 @@ class _LikesAndShareState extends ConsumerState<LikesAndShare> {
   @override
   void initState() {
     ref.read(likesProvider.notifier).loadLikes(widget.id);
-    // ref.read(likesProvider.notifier).postLikes(widget.id);
+    ref.read(likesProvider).postLikeResult?.id;
     super.initState();
   }
 
@@ -453,7 +453,6 @@ class _LikesAndShareState extends ConsumerState<LikesAndShare> {
 
     final countLikes = likes.like?.like;
     final buttonLike = likes.button;
-    final cd = ref.read(likesProvider).postLikeResult?.idDest;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -469,12 +468,11 @@ class _LikesAndShareState extends ConsumerState<LikesAndShare> {
         children: [
           TextButton.icon(
             onPressed: () async {
-              final delete = ref.read(likesProvider).postLikeResult?.id;
-              //final cd = ref.read(likesProvider).postLikeResult?.idDest;
-
               if (buttonLike == false) {
                 await ref.read(likesProvider.notifier).postLikes(widget.id);
               }
+              final delete = ref.read(likesProvider).postLikeResult?.id;
+
               if (buttonLike == true) {
                 await ref
                     .read(likesProvider.notifier)
@@ -486,7 +484,9 @@ class _LikesAndShareState extends ConsumerState<LikesAndShare> {
             style: TextButton.styleFrom(
                 foregroundColor: Colors.black,
                 textStyle: Theme.of(context).textTheme.titleSmall),
-            icon: buttonLike == true
+            icon: ref.watch(likesProvider).postLikeResult?.idDest ==
+                        int.parse(widget.id) &&
+                    buttonLike == true
                 ? const Icon(
                     Icons.favorite,
                     color: Colors.red,

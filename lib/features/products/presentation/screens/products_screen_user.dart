@@ -19,7 +19,9 @@ class ProductsUserScreen extends StatelessWidget {
         title: const Text('Destinos'),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              context.push('/arcamera');
+            },
             icon: const Icon(
               Icons.camera_alt_outlined,
             ),

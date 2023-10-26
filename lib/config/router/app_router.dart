@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:teslo_shop/features/products/presentation/screens/ar_camera.dart';
 import 'package:teslo_shop/features/products/presentation/screens/loading_screen.dart';
 
 import 'package:teslo_shop/features/products/presentation/screens/maps_screen.dart';
@@ -82,6 +83,10 @@ final goRouterProvider = Provider((ref) {
       GoRoute(
         path: '/loading',
         builder: (context, state) => const LoadingScreen(),
+      ),
+      GoRoute(
+        path: '/arcamera',
+        builder: (context, state) => ArCamera(),
       ),
     ],
     redirect: (context, state) {

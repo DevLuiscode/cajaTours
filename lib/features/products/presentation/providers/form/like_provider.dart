@@ -36,6 +36,8 @@ class LikesNotifier extends StateNotifier<LikesState> {
       postLikeResult: likes,
       button: true,
     );
+
+    // likes.state = false;
   }
 
   Future<void> deleteLikes(String idLike) async {
@@ -53,14 +55,12 @@ class LikesState {
   final PostLikeResult? postLikeResult;
   final bool? button;
   final DeleteLikeResponse? deleteLikeResponse;
-  final Map<String, bool>? like2;
 
   LikesState({
     this.like,
     this.postLikeResult,
     this.button = false,
     this.deleteLikeResponse,
-    this.like2,
   });
 
   LikesState copyWith({
@@ -68,14 +68,12 @@ class LikesState {
     PostLikeResult? postLikeResult,
     bool? button,
     DeleteLikeResponse? deleteLikeResponse,
-    Map<String, bool>? like2,
   }) {
     return LikesState(
       like: like ?? this.like,
       postLikeResult: postLikeResult ?? this.postLikeResult,
       button: button ?? this.button,
       deleteLikeResponse: deleteLikeResponse ?? this.deleteLikeResponse,
-      like2: like2 ?? this.like2,
     );
   }
 }

@@ -18,7 +18,7 @@ class ProductsRepositoriesImpl extends ProductsRepository {
   }
 
   @override
-  Future<List<Product>> getProducts({int limit = 10, int offset = 1}) {
+  Future<List<Product>> getProducts({int limit = 15, int offset = 1}) {
     return dataSources.getProducts();
   }
 

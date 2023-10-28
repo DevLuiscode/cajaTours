@@ -16,34 +16,37 @@ class LoginScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-          body: GeometricalBackground(
-              child: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 80),
-            // Icon Banner
-            const Icon(
-              Icons.travel_explore,
-              color: Colors.white,
-              size: 100,
-            ),
-            const SizedBox(height: 80),
+        body: GeometricalBackground(
+          child: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 80),
+                // Icon Banner
+                const Icon(
+                  Icons.travel_explore,
+                  color: Colors.white,
+                  size: 100,
+                ),
+                const SizedBox(height: 80),
 
-            Container(
-              height: size.height - 260, // 80 los dos sizebox y 100 el ícono
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: scaffoldBackgroundColor,
-                borderRadius:
-                    const BorderRadius.only(topLeft: Radius.circular(100)),
-              ),
-              child: const _LoginForm(),
-            )
-          ],
+                Container(
+                  height:
+                      size.height - 260, // 80 los dos sizebox y 100 el ícono
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: scaffoldBackgroundColor,
+                    borderRadius:
+                        const BorderRadius.only(topLeft: Radius.circular(100)),
+                  ),
+                  child: const _LoginForm(),
+                )
+              ],
+            ),
+          ),
         ),
-      ))),
+      ),
     );
   }
 }
@@ -72,10 +75,12 @@ class _LoginForm extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 50),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const SizedBox(height: 50),
+          const Spacer(),
           Text('Login', style: textStyles.titleLarge),
-          const SizedBox(height: 90),
+          //const SizedBox(height: 90),
+          const Spacer(flex: 2),
           CustomTextFormField(
             label: 'Correo',
             keyboardType: TextInputType.emailAddress,
@@ -83,7 +88,7 @@ class _LoginForm extends ConsumerWidget {
             errorMessage:
                 loginForm.isFormPosting ? loginForm.email.errorMessage : null,
           ),
-          const SizedBox(height: 30),
+          const Spacer(),
           CustomTextFormField(
             label: 'Contraseña',
             obscureText: true,

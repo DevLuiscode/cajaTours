@@ -78,11 +78,10 @@ class _RegisterForm extends ConsumerWidget {
     final registerForm = ref.watch(registerFormProvider);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 50),
+      padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
       child: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 50),
             Text('Nueva cuenta', style: textStyles.titleMedium),
             const SizedBox(height: 50),
             CustomTextFormField(

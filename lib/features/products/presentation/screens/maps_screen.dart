@@ -30,7 +30,7 @@ class _NavigationScreenState extends State<MapsScreen> {
   loc.LocationData? _currentPosition;
   LatLng curLocation = const LatLng(-7.148863, -78.506861);
   StreamSubscription<loc.LocationData>? locationSubscription;
-
+  bool isNavigationActive = false;
   @override
   void initState() {
     super.initState();
@@ -52,15 +52,16 @@ class _NavigationScreenState extends State<MapsScreen> {
           : Stack(
               children: [
                 GoogleMap(
-                  zoomControlsEnabled: false,
+                  zoomControlsEnabled: true,
                   polylines: Set<Polyline>.of(polylines.values),
                   initialCameraPosition: CameraPosition(
                     target: curLocation,
-                    zoom: 15,
+                    zoom: 12,
                   ),
                   markers: {sourcePosition!, destinationPosition!},
                   onTap: (latLng) {},
                   onMapCreated: (GoogleMapController controller) {
+                    controller.setMapStyle(_mapStyle);
                     _controller.complete(controller);
                   },
                 ),
@@ -71,7 +72,10 @@ class _NavigationScreenState extends State<MapsScreen> {
                     onTap: () {
                       context.pop();
                     },
-                    child: const Icon(Icons.arrow_back),
+                    child: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
                 Positioned(
@@ -136,43 +140,49 @@ class _NavigationScreenState extends State<MapsScreen> {
       _currentPosition = await location.getLocation();
       curLocation =
           LatLng(_currentPosition!.latitude!, _currentPosition!.longitude!);
+      // locationSubscription = location.onLocationChanged.listen(
+      //   (LocationData currentLocation) {
+      //     controller
+      //         ?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+      //       target:
+      //           LatLng(currentLocation.latitude!, currentLocation.longitude!),
+      //       zoom: 15,
+      //     )));
+
+      //     if (mounted) {
+      //       setState(() {
+      //         curLocation =
+      //             LatLng(currentLocation.latitude!, currentLocation.longitude!);
+      //         sourcePosition = Marker(
+      //           markerId: const MarkerId(
+      //               'source'), // Asegúrate de que este ID es único y válido
+      //           position: curLocation,
+      //           infoWindow: InfoWindow(
+      //             title:
+      //                 '${double.parse((getDistance(LatLng(widget.lat, widget.lng)).toStringAsFixed(2)))} km',
+      //           ),
+      //           onTap: () {},
+      //         );
+      //       });
+
+      //       // Asegúrate de que tu marcador ha sido añadido al mapa antes de intentar mostrar su ventana de información
+      //       Future.delayed(const Duration(seconds: 1), () async {
+      //         if (mounted) {
+      //           controller?.showMarkerInfoWindow(const MarkerId('source'));
+      //         }
+      //       });
+      //       getDirections(LatLng(widget.lat, widget.lng));
+      //     }
+      //   },
+      // );
       locationSubscription = location.onLocationChanged.listen(
         (LocationData currentLocation) {
-          controller
-              ?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-            target:
-                LatLng(currentLocation.latitude!, currentLocation.longitude!),
-            zoom: 13,
-          )));
-          // if (mounted) {
-          //   controller?.showMarkerInfoWindow(
-          //       MarkerId(sourcePosition!.markerId.value));
-          //   setState(() {
-          //     curLocation =
-          //         LatLng(currentLocation.latitude!, currentLocation.longitude!);
-          //     sourcePosition = Marker(
-          //       markerId: MarkerId(currentLocation.toString()),
-          //       icon: BitmapDescriptor.defaultMarkerWithHue(
-          //           BitmapDescriptor.hueBlue),
-          //       position: LatLng(
-          //           currentLocation.latitude!, currentLocation.longitude!),
-          //       infoWindow: InfoWindow(
-          //           title:
-          //               '${double.parse((getDistance(LatLng(widget.lat, widget.lng)).toStringAsFixed(2)))} km'),
-          //       onTap: () {
-          //         print('market tapped---------------');
-          //       },
-          //     );
-          //   });
-          //   getDirections(LatLng(widget.lat, widget.lng));
-          // }
           if (mounted) {
             setState(() {
               curLocation =
                   LatLng(currentLocation.latitude!, currentLocation.longitude!);
               sourcePosition = Marker(
-                markerId: const MarkerId(
-                    'source'), // Asegúrate de que este ID es único y válido
+                markerId: const MarkerId('source'),
                 position: curLocation,
                 infoWindow: InfoWindow(
                   title:
@@ -188,6 +198,15 @@ class _NavigationScreenState extends State<MapsScreen> {
                 controller?.showMarkerInfoWindow(const MarkerId('source'));
               }
             });
+
+            // Solo cambia la cámara si la navegación está activa
+            if (isNavigationActive) {
+              controller
+                  ?.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+                target: curLocation,
+                zoom: 15,
+              )));
+            }
             getDirections(LatLng(widget.lat, widget.lng));
           }
         },
@@ -253,3 +272,140 @@ class _NavigationScreenState extends State<MapsScreen> {
     });
   }
 }
+
+String _mapStyle = '''
+[
+      {
+        "elementType": "geometry",
+        "stylers": [
+          {
+            "color": "#242f3e"
+          }
+        ]
+      },
+      {
+        "elementType": "labels.text.stroke",
+        "stylers": [
+          {
+            "color": "#242f3e"
+          }
+        ]
+      },
+      {
+        "elementType": "labels.text.fill",
+        "stylers": [
+          {
+            "color": "#746855"
+          }
+        ]
+      },
+      {
+        "featureType": "administrative.locality",
+        "elementType": "labels.text.fill",
+        "stylers": [
+          {
+            "color": "#d59563"
+          }
+        ]
+      },
+      {
+        "featureType": "poi",
+        "elementType": "labels.text.fill",
+        "stylers": [
+          {
+            "color": "#d59563"
+          }
+        ]
+      },
+      {
+        "featureType": "poi.park",
+        "elementType": "geometry",
+        "stylers": [
+          {
+            "color": "#263c3f"
+          }
+        ]
+      },
+      {
+        "featureType": "poi.park",
+        "elementType": "labels.text.fill",
+        "stylers": [
+          {
+            "color": "#6b9a76"
+          }
+        ]
+      },
+      {
+        "featureType": "road",
+        "elementType": "geometry",
+        "stylers": [
+          {
+            "color": "#38414e"
+          }
+        ]
+      },
+      {
+        "featureType": "road",
+        "elementType": "geometry.stroke",
+        "stylers": [
+          {
+            "color": "#212a37"
+          }
+        ]
+      },
+      {
+        "featureType": "road",
+        "elementType": "labels.text.fill",
+        "stylers": [
+          {
+            "color": "#9ca5b3"
+          }
+        ]
+      },
+      {
+        "featureType": "road.highway",
+        "elementType": "geometry",
+        "stylers": [
+          {
+            "color": "#746855"
+          }
+        ]
+      },
+      {
+        "featureType": "road.highway",
+        "elementType": "geometry.stroke",
+        "stylers": [
+          {
+            "color": "#1f2835"
+          }
+        ]
+      },
+      {
+        "featureType": "water",
+        "elementType": "geometry",
+        "stylers": [
+          {
+            "color": "#17263c"
+          }
+        ]
+      },
+      {
+        "featureType": "water",
+        "elementType": "labels.text.fill",
+        "stylers": [
+          {
+            "color": "#515c6d"
+          }
+        ]
+      },
+      {
+        "featureType": "water",
+        "elementType": "labels.text.stroke",
+        "stylers": [
+          {
+            "color": "#17263c"
+          }
+        ]
+      }
+    ]
+''';

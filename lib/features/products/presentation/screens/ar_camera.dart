@@ -46,7 +46,7 @@ class _PersonARPageState extends State<ArCamera> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size.width;
-    print(nodes.length);
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
@@ -116,7 +116,7 @@ class _PersonARPageState extends State<ArCamera> {
       scale: vector.Vector3.all(scale),
     );
     arkitController.add(node!);
-    print(node?.url.toString());
+
     // Agregar el nodo a la lista
     nodes.add(node!);
   }

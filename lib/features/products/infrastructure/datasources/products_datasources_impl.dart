@@ -67,7 +67,7 @@ class ProductsDataSourcesImple implements ProductsDataSources {
   }
 
   @override
-  Future<List<Product>> getProducts({int offset = 1, int limit = 10}) async {
+  Future<List<Product>> getProducts({int offset = 1, int limit = 15}) async {
     final response = await dio.get<List>(
         '/api/destination/destinationpag?pageIndex=$offset&pageSize=$limit');
 

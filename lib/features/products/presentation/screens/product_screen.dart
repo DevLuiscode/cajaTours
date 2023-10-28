@@ -75,7 +75,7 @@ class _DestinosViewState extends ConsumerState<_DestinosView> {
               delegate: BuilderPersistenDelegate(
                 maxExtent: MediaQuery.of(context).size.height,
                 minExtent: MediaQuery.of(context).size.height *
-                    0.25, // Ajusta este valor según sea necesario
+                    0.30, // Ajusta este valor según sea necesario
                 builder: (porcent) {
                   return AnimatedDetailHeader(
                     product: widget.product,
@@ -87,76 +87,70 @@ class _DestinosViewState extends ConsumerState<_DestinosView> {
             ),
             SliverToBoxAdapter(
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                child: Container(
-                  constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).size.height * 0.5,
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.location_on,
-                            color: Colors.black12,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.location_on,
+                          color: Colors.black12,
+                        ),
+                        Flexible(
+                          child: Text(
+                            widget.product.location,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  color: Colors.blue,
+                                  fontSize: 20,
+                                ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          Flexible(
-                            child: Text(
-                              widget.product.location,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                    color: Colors.blue,
-                                    fontSize: 20,
-                                  ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          )
-                        ],
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(widget.product.description),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 100),
+                      height: 200,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemExtent: 200,
+                        itemCount: widget.product.videos.length,
+                        itemBuilder: (context, index) {
+                          final videoUrl = widget.product.videos[index].url;
+
+                          final RegExp exp = RegExp(r'd/([a-zA-Z0-9_-]+)/');
+                          final match = exp.firstMatch(videoUrl);
+                          String url = '';
+                          if (match != null) {
+                            final fileId = match.group(1);
+                            url =
+                                'https://drive.google.com/uc?export=download&id=$fileId';
+                          }
+
+                          return VideoReproductor(
+                            videoUrl: url,
+                          );
+                        },
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Flexible(
-                        child: Text(widget.product.description),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: 280,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemExtent: 210,
-                  itemCount: widget.product.videos.length,
-                  itemBuilder: (context, index) {
-                    final videoUrl = widget.product.videos[index].url;
-
-                    final RegExp exp = RegExp(r'd/([a-zA-Z0-9_-]+)/');
-                    final match = exp.firstMatch(videoUrl);
-                    String url = '';
-                    if (match != null) {
-                      final fileId = match.group(1);
-                      url =
-                          'https://drive.google.com/uc?export=download&id=$fileId';
-                    }
-
-                    return VideoReproductor(
-                      videoUrl: url,
-                    );
-                  },
-                ),
-              ),
-            ),
-            const SliverToBoxAdapter(
-              child: SizedBox(height: 50),
-            )
           ],
         ),
         Positioned.fill(
@@ -317,6 +311,7 @@ class AnimatedDetailHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.of(context).padding.top;
+    final sizeHeih = MediaQuery.of(context).size.height * 0.4;
 
     return Stack(
       fit: StackFit.expand,
@@ -335,8 +330,8 @@ class AnimatedDetailHeader extends StatelessWidget {
                 ),
               ),
               Positioned(
-                top: topPadding + 30,
-                left: 300 * (0.1 - bottomPorcent),
+                top: topPadding + 5,
+                left: 100 * (0.05 - bottomPorcent),
                 child: IconButton(
                   icon: const Icon(
                     Icons.arrow_back,
@@ -349,7 +344,7 @@ class AnimatedDetailHeader extends StatelessWidget {
                 ),
               ),
               Positioned(
-                top: lerpDouble(5, 240, topPorcent),
+                top: lerpDouble(sizeHeih * 0.1, 100, topPorcent),
                 left: lerpDouble(60, 30, topPorcent)!.clamp(20.0, 50.0),
                 right: 20,
                 child: Text(
@@ -365,9 +360,9 @@ class AnimatedDetailHeader extends StatelessWidget {
                 ),
               ),
               Positioned(
-                top: lerpDouble(20, 300, topPorcent),
+                top: lerpDouble(sizeHeih * 0.2, 300, topPorcent),
                 left: lerpDouble(60, 30, topPorcent)!.clamp(20.0, 50.0),
-                right: 220,
+                right: 200,
                 child: Container(
                   width: 300,
                   decoration: BoxDecoration(
@@ -606,15 +601,6 @@ class BuilderPersistenDelegate extends SliverPersistentHeaderDelegate {
   }
 }
 
-//
-
-//
-///
-///
-///
-//
-
-//
 class _ProductView extends ConsumerWidget {
   final Product product;
 
